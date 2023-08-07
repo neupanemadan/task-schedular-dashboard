@@ -19,6 +19,15 @@
             <n-input v-model:value="user.email" placeholder="Email">
               <template #prefix>
                 <n-icon size="18" color="#808695">
+                  <MailOpenOutline />
+                </n-icon>
+              </template>
+            </n-input>
+          </n-form-item>
+          <n-form-item path="Username" v-if="userCreate">
+            <n-input v-model:value="user.username" placeholder="Username">
+              <template #prefix>
+                <n-icon size="18" color="#808695">
                   <PersonOutline />
                 </n-icon>
               </template>
@@ -41,11 +50,20 @@
           <n-form-item>
             <n-button
               type="primary"
-              @click="handleSubmit"
+              @click="loginUser"
               size="large"
               :loading="loading"
               block
             >Login</n-button>
+          </n-form-item>
+          <n-form-item>
+            <n-button
+              type="info"
+              @click="createUser"
+              size="large"
+              :loading="loading"
+              block
+            >Register</n-button>
           </n-form-item>
         </n-form>
       </div>
@@ -54,12 +72,13 @@
 </template>
 
 <script>
-import { PersonOutline, LockClosedOutline } from "@vicons/ionicons5";
+import { PersonOutline, LockClosedOutline, MailOpenOutline } from "@vicons/ionicons5";
 
 export default {
   components: {
     PersonOutline,
-    LockClosedOutline
+    LockClosedOutline,
+    MailOpenOutline
   },
   data() {
     return {
@@ -67,12 +86,19 @@ export default {
       hasLoginError: false,
       user: {
         email: null,
+        username: null,
         password: null
       },
+      userCreate: false,
       rules: {
         email: {
           required: true,
           message: "Email is Required.",
+          trigger: "blur"
+        },
+        username: {
+          required: true,
+          message: "Username is Required.",
           trigger: "blur"
         },
         password: {
@@ -84,11 +110,14 @@ export default {
     };
   },
   methods: {
+    loginUser () {
+      this.userCreate = false
+      this.handleSubmit()
+    },
     handleSubmit() {
       this.$auth
         .login(this.user)
         .then(() => {
-          console.log('---------------00000000000000')
           this.$router.push({
             name: "home"
           });
@@ -96,6 +125,10 @@ export default {
         .catch(() => {
           this.hasLoginError = true;
         });
+    },
+    createUser () {
+      this.userCreate = true
+      this.handleSubmit()
     }
   }
 };
