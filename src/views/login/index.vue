@@ -3,7 +3,8 @@
     <div class="view-account-header"></div>
     <div class="view-account-container">
       <div class="view-account-top">
-        <div class="view-account-top-desc">Login</div>
+        <div class="view-account-top-desc" v-if="userCreate">Register</div>
+        <div class="view-account-top-desc" v-else>Login</div>
       </div>
       <n-alert
         v-if="hasLoginError"
@@ -13,6 +14,14 @@
         closable
         :bordered="false"
       >Email or Password is incorrect</n-alert>
+      <n-alert
+        v-if="hasSignUpError"
+        title="Sign Up Error!"
+        type="error"
+        class="sign-up-alert"
+        closable
+        :bordered="false"
+      >Sign Up Error</n-alert>
       <div class="view-account-form">
         <n-form ref="formRef" label-placement="left" size="large" :model="user" :rules="rules">
           <n-form-item path="Email">
@@ -24,8 +33,8 @@
               </template>
             </n-input>
           </n-form-item>
-          <n-form-item path="Username" v-if="userCreate">
-            <n-input v-model:value="user.username" placeholder="Username">
+          <n-form-item path="Name" v-if="userCreate">
+            <n-input v-model:value="user.name" placeholder="Name">
               <template #prefix>
                 <n-icon size="18" color="#808695">
                   <PersonOutline />
@@ -47,6 +56,15 @@
               </template>
             </n-input>
           </n-form-item>
+          <n-form-item v-if="userCreate">
+            <n-button
+              type="info"
+              @click="signUp"
+              size="large"
+              :loading="loading"
+              block
+            >Sign Up</n-button>
+          </n-form-item>
           <n-form-item>
             <n-button
               type="primary"
@@ -56,7 +74,7 @@
               block
             >Login</n-button>
           </n-form-item>
-          <n-form-item>
+          <n-form-item v-if="!userCreate">
             <n-button
               type="info"
               @click="createUser"
@@ -84,6 +102,7 @@ export default {
     return {
       loading: false,
       hasLoginError: false,
+      hasSignUpError: false,
       user: {
         email: null,
         username: null,
@@ -96,9 +115,9 @@ export default {
           message: "Email is Required.",
           trigger: "blur"
         },
-        username: {
+        name: {
           required: true,
-          message: "Username is Required.",
+          message: "Name is Required.",
           trigger: "blur"
         },
         password: {
@@ -115,6 +134,7 @@ export default {
       this.handleSubmit()
     },
     handleSubmit() {
+      this.hasSignUpError = false;
       this.$auth
         .login(this.user)
         .then(() => {
@@ -126,9 +146,22 @@ export default {
           this.hasLoginError = true;
         });
     },
+    signUp () {
+      this.hasLoginError = false;
+      console.log(this.user)
+      this.$auth
+        .signup(this.user)
+        .then(() => {
+          this.$router.push({
+            name: "home"
+          });
+        })
+        .catch(() => {
+          this.hasSignUpError = true;
+        });
+    },
     createUser () {
       this.userCreate = true
-      this.handleSubmit()
     }
   }
 };
