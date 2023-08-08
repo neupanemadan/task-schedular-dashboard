@@ -11,8 +11,8 @@ import { defineComponent } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { mapActions, mapState } from "pinia";
-import { aboutStore } from "@/store/about.js";
+import { mapActions, mapState } from "pinia"
+import { aboutStore } from "@/store/about.js"
 import jaLocale from '@fullcalendar/core/locales/ja'
 
 
@@ -33,13 +33,15 @@ data() {
         { title: 'Event 2', start: '2023-08-08T14:00:00', end: '2023-08-08T16:00:00' },
         // Add more events as needed
       ],
+      editable: true,
       initialView: 'timeGridWeek',
       locale: jaLocale,
       headerToolbar: {
         left: 'prev,next',
         center: 'title',
         right: 'timeGridWeek,timeGridDay' // user can switch between the two
-      }
+      },
+      selectable: true
     },
   };
 },
