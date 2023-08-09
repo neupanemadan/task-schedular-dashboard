@@ -47,5 +47,27 @@ export const taskStore = defineStore('tasks', {
           .catch((error) => reject(error));
      })
     },
+
+    updateTask(id, data) {
+      return new Promise((resolve, reject) => {
+        axios
+        .put(`api/task/${id}`, data, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(({ data }) => {
+          const updatedData = data.task;
+          const index = this.tasks.findIndex(
+            task => task.id === updatedData.id
+          );
+          this.tasks.pop(index, 1, updatedData);
+
+
+          resolve(updatedData)
+        })
+          .catch((error) => reject(error));
+     })
+    },
   }
 })

@@ -95,7 +95,7 @@ import { defineComponent, ref } from "vue";
 import { useMessage } from 'naive-ui'
 
 export default defineComponent({
-  emits : ["emitCancel", "submitTask", "deleteTask"],
+  emits : ["emitCancel", "submitTask", "deleteTask", "updateTask"],
 
   setup(props, context) {
     const formRef = ref(null);
@@ -108,8 +108,16 @@ export default defineComponent({
         e.preventDefault();
         formRef.value?.validate((errors) => {
           if (!errors) {
-            context.emit('submitTask', props.selectedTask)
-            message.success("Data Updated");
+            if (props.selectedTask.id) {
+              console.log('--------------update----------------')
+              context.emit('updateTask', props.selectedTask)
+              message.success("Data Updated");
+            } else {
+              console.log('--------------create----------------')
+              console.log(props.selectedTask)
+              context.emit('submitTask', props.selectedTask)
+              message.success("Data Created");
+            }
           } else {
             message.error("Invalid, Re-check the data!");
           }
@@ -117,7 +125,7 @@ export default defineComponent({
      }
 
      const handleDeleteClick = () => {
-      context.emit('deleteTask', selectedTask.id)
+      context.emit('deleteTask', props.selectedTask.id)
      }
 
     return {

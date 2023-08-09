@@ -10,6 +10,7 @@
       @emitCancel="onCancelUpdate"
       @submitTask="onSubmitTask"
       @deleteTask="onDeleteTask"
+      @updateTask="onUpdateTask"
     />
   </div>
 </template>
@@ -53,13 +54,12 @@ data() {
       selectMirror: true,
     },
     showDetail: false,
-    selectedTask: null,
-    // tasks: []
+    selectedTask: null
   };
 },
 
 methods: {
-  ...mapActions(taskStore, ["fetchTasks", "createTask", "deleteTask"]),
+  ...mapActions(taskStore, ["fetchTasks", "createTask", "deleteTask", "updateTask"]),
   async prepareEvents () {
     await this.fetchTasks()
     this.calendarOptions.events = this.tasks.map(task => ({
@@ -89,6 +89,7 @@ methods: {
       }
     const data = {
         name: event.title,
+        id: event.id,
         start_date: moment(event.startStr).format('YYYY-MM-DD HH:mm:ss'),
         end_date: moment(event.endStr).format('YYYY-MM-DD HH:mm:ss'),
         priority:  event.extendedProps.priority,
@@ -99,6 +100,11 @@ methods: {
   },
   onCancelUpdate () {
     this.showDetail = false
+  },
+  onUpdateTask (data) {
+    const id = data.id
+    delete data.id
+    this.updateTask(id, data)
   },
   onSubmitTask (task) {
     this.createTask(task).then( (task) => {
@@ -115,17 +121,18 @@ methods: {
     this.showDetail = false
   },
   onDeleteTask (id) {
-    console.log(id)
     this.deleteTask(id).then((task) => {
-      this.calendarOptions.events.remove({
-        title: task.name,
-        start: task.start_date,
-        end: task.end_date,
-        priority: task.priority,
-        remarks: task.remarks,
-        color: this.getColor(task.priority)
-      })
-    })
+    this.calendarOptions.events = this.calendarOptions.events.filter((event) => {
+      return (
+        event.title !== task.name ||
+        event.start !== task.start_date ||
+        event.end !== task.end_date ||
+        event.priority !== task.priority ||
+        event.remarks !== task.remarks ||
+        event.color !== this.getColor(task.priority)
+      );
+    });
+  });
     this.showDetail = false
   },
   getColor (priority) {
