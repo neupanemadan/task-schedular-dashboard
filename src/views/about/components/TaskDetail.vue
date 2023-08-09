@@ -14,20 +14,19 @@
       ref="formRef"
       inline
       :label-width="80"
-      :model="task"
+      :model="selectedTask"
       :rules="rules"
-      :size="size"
     >
     <n-row gutter="12">
       <n-col :span="6">
         <n-form-item label="Task Name" path="name">
-            <n-input v-model:value="task.name" placeholder="Input Name" />
+            <n-input v-model:value="selectedTask.name" placeholder="Input Name" />
          </n-form-item>
       </n-col>
       <n-col :span="6">
         <n-form-item label="Start" path="start_date">
           <n-date-picker
-            v-model:formatted-value="task.start_date"
+            v-model:formatted-value="selectedTask.start_date"
             value-format="yyyy-MM-dd HH:mm:ss"
             type="datetime"
             clearable
@@ -37,7 +36,7 @@
       <n-col :span="6">
         <n-form-item label="End" path="end_date">
           <n-date-picker
-            v-model:formatted-value="task.end_date"
+            v-model:formatted-value="selectedTask.end_date"
             value-format="yyyy-MM-dd HH:mm:ss"
             type="datetime"
             clearable
@@ -47,7 +46,7 @@
       <n-col :span="6">
         <n-form-item label="Priority" path="priority">
         <n-radio-group
-          v-model:value="task.priority"
+          v-model:value="selectedTask.priority"
           name="Priority"
           style="margin-bottom: 12px"
         >
@@ -66,7 +65,7 @@
       <n-col :span="12">
         <n-form-item label="remarks" path="remarks">
         <n-input
-          v-model:value="task.remarks"
+          v-model:value="selectedTask.remarks"
           type="textarea"
           placeholder="remarks"
         />
@@ -74,10 +73,13 @@
       </n-col>
       <n-col :span="24">
         <n-form-item>
-        <n-button @click="handleValidateClick">
+        <n-button type="success" @click="handleValidateClick">
           Submit
         </n-button>
-        <n-button @click="handleCancelClick" style="margin-left: 10px;">
+        <n-button type="error" @click="handleDeleteClick" style="margin-left: 10px;">
+          Delete
+        </n-button>
+        <n-button type="tertiary" @click="handleCancelClick" style="margin-left: 10px;">
           Cancel
         </n-button>
       </n-form-item>
@@ -90,38 +92,36 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import { useMessage } from "naive-ui";
+import { useMessage } from 'naive-ui'
 
 export default defineComponent({
-  emits : ["emitCancel"],
+  emits : ["emitCancel", "submitTask", "deleteTask"],
 
   setup(props, context) {
-    const task = ref({
-        name: "",
-        start_date: "2007-06-30 12:08:55",
-        end_date: "2007-06-30 12:08:55",
-        priority: "regular",
-        remarks: ""
-      });
+    const formRef = ref(null);
     const message = useMessage();
     const handleCancelClick = () => {
       context.emit('emitCancel')
     }
 
     const handleValidateClick = (e) => {
-      console.log(task.value)
         e.preventDefault();
-        task.value?.validate((errors) => {
+        formRef.value?.validate((errors) => {
           if (!errors) {
-            message.success("Valid");
+            context.emit('submitTask', props.selectedTask)
+            message.success("Data Updated");
           } else {
-            console.log(errors);
-            message.error("Invalid");
+            message.error("Invalid, Re-check the data!");
           }
         });
      }
 
+     const handleDeleteClick = () => {
+      context.emit('deleteTask')
+     }
+
     return {
+      formRef,
       bodyStyle: {
         width: "1000px"
       },
@@ -131,7 +131,6 @@ export default defineComponent({
       },
       size: ref("medium"),
       formattedValue: ref("2007-06-30 12:08:55"),
-      task,
       rules: {
         name: {
           required: true,
@@ -140,8 +139,21 @@ export default defineComponent({
         }
       },
       handleCancelClick,
-      handleValidateClick
+      handleValidateClick,
+      handleDeleteClick
     };
+  },
+  props: {
+    selectedTask: {
+      default: {
+        name: " ",
+        start_date: "2007-06-30 12:08:55",
+        end_date: "2007-06-30 12:08:55",
+        priority: "regular",
+        remarks: " "
+      },
+      type: Object
+    }
   }
 });
 </script>
