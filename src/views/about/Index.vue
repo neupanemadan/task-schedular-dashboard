@@ -6,12 +6,8 @@
     </div>
     <TaskDetail
       v-if="showDetail"
-    >
-      <n-popover width="trigger">
-        This old town don't smell too pretty and I can feel the warning signs
-        running around my mind
-    </n-popover>
-  </TaskDetail>
+      @cancelUpdate="onCancelUpdate"
+    />
   </div>
 </template>
 <script>
@@ -22,10 +18,12 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { mapActions, mapState } from "pinia"
 import { aboutStore } from "@/store/about.js"
 import jaLocale from '@fullcalendar/core/locales/ja'
+import TaskDetail from './components/TaskDetail.vue'
 
 export default defineComponent({
 components: {
-  FullCalendar
+  FullCalendar,
+  TaskDetail
 },
 computed: {
   ...mapState(aboutStore, ["abouts"])
@@ -62,6 +60,9 @@ methods: {
   handleSelect () {
     console.log('----------------------------dsfa')
     this.showDetail = true
+  },
+  onCancelUpdate () {
+    this.showDetail = false
   }
 },
 mounted() {
