@@ -6,7 +6,7 @@
     </div>
     <TaskDetail
       v-if="showDetail"
-      @cancelUpdate="onCancelUpdate"
+      @emitCancel="onCancelUpdate"
     />
   </div>
 </template>
@@ -58,7 +58,6 @@ data() {
 methods: {
   ...mapActions(aboutStore, ["fetchAbout"]),
   handleSelect () {
-    console.log('----------------------------dsfa')
     this.showDetail = true
   },
   onCancelUpdate () {
