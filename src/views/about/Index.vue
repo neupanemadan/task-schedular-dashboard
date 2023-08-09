@@ -59,10 +59,11 @@ data() {
 },
 
 methods: {
-  ...mapActions(taskStore, ["fetchTasks", "createTask"]),
+  ...mapActions(taskStore, ["fetchTasks", "createTask", "deleteTask"]),
   async prepareEvents () {
     await this.fetchTasks()
     this.calendarOptions.events = this.tasks.map(task => ({
+      id: task.id,
       title: task.name,
       start: task.start_date,
       end: task.end_date,
@@ -113,8 +114,19 @@ methods: {
     )
     this.showDetail = false
   },
-  onDeleteTask () {
-
+  onDeleteTask (id) {
+    console.log(id)
+    this.deleteTask(id).then((task) => {
+      this.calendarOptions.events.remove({
+        title: task.name,
+        start: task.start_date,
+        end: task.end_date,
+        priority: task.priority,
+        remarks: task.remarks,
+        color: this.getColor(task.priority)
+      })
+    })
+    this.showDetail = false
   },
   getColor (priority) {
     if (priority === 'urgent') {

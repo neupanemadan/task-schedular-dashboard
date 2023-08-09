@@ -28,6 +28,24 @@ export const taskStore = defineStore('tasks', {
         })
 
         this.tasks = data.tasks;
-    }
+    },
+
+    deleteTask(id) {
+      return new Promise((resolve, reject) => {
+        axios
+        .delete(`api/task/${id}`)
+        .then(({ data }) => {
+          const deletedData = data.task;
+          const index = this.tasks.findIndex(
+            task => task.id === deletedData.id
+          );
+          this.tasks.pop(index, 1, deletedData);
+
+
+          resolve(deletedData)
+        })
+          .catch((error) => reject(error));
+     })
+    },
   }
 })

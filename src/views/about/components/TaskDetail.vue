@@ -76,7 +76,7 @@
         <n-button type="success" @click="handleValidateClick">
           Submit
         </n-button>
-        <n-button type="error" @click="handleDeleteClick" style="margin-left: 10px;">
+        <n-button type="error" @click="handleDeleteClick" style="margin-left: 10px;" v-if="selectedTask.id">
           Delete
         </n-button>
         <n-button type="tertiary" @click="handleCancelClick" style="margin-left: 10px;">
@@ -117,7 +117,7 @@ export default defineComponent({
      }
 
      const handleDeleteClick = () => {
-      context.emit('deleteTask')
+      context.emit('deleteTask', selectedTask.id)
      }
 
     return {
