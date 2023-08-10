@@ -14,7 +14,7 @@
             <n-layout-header bordered content-style="padding: 700px;">
               <div class="">
                 <n-text tag="div" class="ui-logo">
-                  <img src="../assets/logo.png" />
+                  TASK SCHEDULAR
                 </n-text>
                 <!-- <n-menu
                   mode="horizontal"
@@ -64,7 +64,7 @@
                               </n-avatar>
                             </div>
                             <span class="name">
-                              {{ $auth.currentUser().full_name }}
+                              {{ $auth.currentUser()?.full_name }}
                               <n-icon class="tip">
                                 <CaretDownSharp />
                               </n-icon>
@@ -97,16 +97,7 @@ import {
   CaretDownSharp,
   PersonOutline,
   PeopleOutline,
-  GridOutline,
-  PeopleCircleOutline,
-  ChatboxOutline,
-  CogOutline,
-  AlbumsOutline,
-  ReaderOutline,
-  CodeWorkingOutline,
-  LayersOutline,
-  CalendarNumberOutline,
-  ImageOutline
+  ReaderOutline
 } from "@vicons/ionicons5";
 import { RouterLink } from "vue-router";
 import { useAuth } from "../auth/";
@@ -138,12 +129,12 @@ const menus = [
         RouterLink,
         {
           to: {
-            name: "about"
+            name: "schedular"
           }
         },
-        { default: () => "About" }
+        { default: () => "Schedular" }
       ),
-    key: "about",
+    key: "schedular",
     icon: renderIcon(ReaderOutline)
   }
 ];

@@ -104,11 +104,29 @@ methods: {
   onUpdateTask (data) {
     const id = data.id
     delete data.id
-    this.updateTask(id, data)
+    this.updateTask(id, data).then((task) => {
+      this.calendarOptions.events = this.calendarOptions.events.map((event) => {
+        if (event.id === task.id) {
+          return {
+            id: event.id,
+            title: task.name,
+            start: task.start_date,
+            end: task.end_date,
+            priority: task.priority,
+            remarks: task.remarks,
+            color: this.getColor(task.priority)
+          };
+        } else {
+          return event;
+        }
+      });
+    })
+    this.showDetail = false
   },
   onSubmitTask (task) {
     this.createTask(task).then( (task) => {
       this.calendarOptions.events.push({
+        id: task.id,
         title: task.name,
         start: task.start_date,
         end: task.end_date,
@@ -145,26 +163,16 @@ methods: {
     }
   },
   handleEventDropAndResize ({event}) {
-      const schedule = event.extendedProps.schedule
-      this.computeSagyouJikan({
-        kaishi_yotei: moment(event.startStr).format('YYYY-MM-DD 08:30:00'),
-        kanryou_yotei: moment(event.endStr).format('YYYY-MM-DD 17:30:00')
-      }).then((response) => {
-        this.update({
-          columns: this.chart.data_config.columns,
-          data: {
-            ...schedule.getFormData(),
-            daily_target: response.daily_target,
-            kaishi_yotei: moment(event.startStr).format('YYYY-MM-DD 08:30:00'),
-            kanryou_yotei: moment(event.endStr).format('YYYY-MM-DD 17:30:00'),
-            updated_by: this.currentUser.name
-          },
-          id: schedule.id
-        }).then((schedule) => {
-          event.setExtendedProp('schedule', schedule)
-        })
-      })
-    },
+      const data = {
+          id: event.id,
+          name: event.title,
+          start_date: moment(event.startStr).format('YYYY-MM-DD HH:mm:ss'),
+          end_date: moment(event.endStr).format('YYYY-MM-DD HH:mm:ss'),
+          priority:  event.extendedProps.priority,
+          remarks:  event.extendedProps.remarks
+      }
+        this.onUpdateTask(data)
+      },
   },
 mounted() {
     this.prepareEvents()

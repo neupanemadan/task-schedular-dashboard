@@ -8,11 +8,7 @@ export const taskStore = defineStore('tasks', {
   actions: {
      createTask(data) {
       return new Promise((resolve, reject) => {
-        return axios.post('api/task', data, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-          })
+        return axios.post('api/task', data)
           .then(({ data }) => {
             this.tasks.push(data.task)
             resolve(data.task)
@@ -51,11 +47,7 @@ export const taskStore = defineStore('tasks', {
     updateTask(id, data) {
       return new Promise((resolve, reject) => {
         axios
-        .put(`api/task/${id}`, data, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        })
+        .put(`api/task/${id}`, data)
         .then(({ data }) => {
           const updatedData = data.task;
           const index = this.tasks.findIndex(

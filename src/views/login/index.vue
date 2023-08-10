@@ -3,8 +3,7 @@
     <div class="view-account-header"></div>
     <div class="view-account-container">
       <div class="view-account-top">
-        <div class="view-account-top-desc" v-if="userCreate">Register</div>
-        <div class="view-account-top-desc" v-else>Login</div>
+        <div class="view-account-top-desc">Login</div>
       </div>
       <n-alert
         v-if="hasLoginError"
@@ -14,14 +13,6 @@
         closable
         :bordered="false"
       >Email or Password is incorrect</n-alert>
-      <n-alert
-        v-if="hasSignUpError"
-        title="Sign Up Error!"
-        type="error"
-        class="sign-up-alert"
-        closable
-        :bordered="false"
-      >Sign Up Error</n-alert>
       <div class="view-account-form">
         <n-form ref="formRef" label-placement="left" size="large" :model="user" :rules="rules">
           <n-form-item path="Email">
@@ -29,15 +20,6 @@
               <template #prefix>
                 <n-icon size="18" color="#808695">
                   <MailOpenOutline />
-                </n-icon>
-              </template>
-            </n-input>
-          </n-form-item>
-          <n-form-item path="Name" v-if="userCreate">
-            <n-input v-model:value="user.name" placeholder="Name">
-              <template #prefix>
-                <n-icon size="18" color="#808695">
-                  <PersonOutline />
                 </n-icon>
               </template>
             </n-input>
@@ -56,32 +38,23 @@
               </template>
             </n-input>
           </n-form-item>
-          <n-form-item v-if="userCreate">
-            <n-button
-              type="info"
-              @click="signUp"
-              size="large"
-              :loading="loading"
-              block
-            >Sign Up</n-button>
-          </n-form-item>
           <n-form-item>
             <n-button
               type="primary"
-              @click="loginUser"
+              @click="handleSubmit"
               size="large"
               :loading="loading"
               block
             >Login</n-button>
           </n-form-item>
-          <n-form-item v-if="!userCreate">
+          <n-form-item>
             <n-button
               type="info"
-              @click="createUser"
+              @click="$router.push('signup')"
               size="large"
               :loading="loading"
               block
-            >Register</n-button>
+            >Sign Up</n-button>
           </n-form-item>
         </n-form>
       </div>
@@ -102,13 +75,11 @@ export default {
     return {
       loading: false,
       hasLoginError: false,
-      hasSignUpError: false,
       user: {
         email: null,
         username: null,
         password: null
       },
-      userCreate: false,
       rules: {
         email: {
           required: true,
@@ -129,12 +100,8 @@ export default {
     };
   },
   methods: {
-    loginUser () {
-      this.userCreate = false
-      this.handleSubmit()
-    },
     handleSubmit() {
-      this.hasSignUpError = false;
+      this.hasLoginError = false;
       this.$auth
         .login(this.user)
         .then(() => {
@@ -145,23 +112,6 @@ export default {
         .catch(() => {
           this.hasLoginError = true;
         });
-    },
-    signUp () {
-      this.hasLoginError = false;
-      console.log(this.user)
-      this.$auth
-        .signup(this.user)
-        .then(() => {
-          this.$router.push({
-            name: "home"
-          });
-        })
-        .catch(() => {
-          this.hasSignUpError = true;
-        });
-    },
-    createUser () {
-      this.userCreate = true
     }
   }
 };

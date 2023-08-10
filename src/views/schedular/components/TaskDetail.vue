@@ -14,19 +14,19 @@
       ref="formRef"
       inline
       :label-width="80"
-      :model="selectedTask"
+      :model="task"
       :rules="rules"
     >
     <n-row gutter="12">
       <n-col :span="6">
         <n-form-item label="Task Name" path="name">
-            <n-input v-model:value="selectedTask.name" placeholder="Input Name" />
+            <n-input v-model:value="task.name" placeholder="Input Name" />
          </n-form-item>
       </n-col>
       <n-col :span="6">
         <n-form-item label="Start" path="start_date">
           <n-date-picker
-            v-model:formatted-value="selectedTask.start_date"
+            v-model:formatted-value="task.start_date"
             value-format="yyyy-MM-dd HH:mm:ss"
             type="datetime"
             clearable
@@ -36,7 +36,7 @@
       <n-col :span="6">
         <n-form-item label="End" path="end_date">
           <n-date-picker
-            v-model:formatted-value="selectedTask.end_date"
+            v-model:formatted-value="task.end_date"
             value-format="yyyy-MM-dd HH:mm:ss"
             type="datetime"
             clearable
@@ -46,7 +46,7 @@
       <n-col :span="6">
         <n-form-item label="Priority" path="priority">
         <n-radio-group
-          v-model:value="selectedTask.priority"
+          v-model:value="task.priority"
           name="Priority"
           style="margin-bottom: 12px"
         >
@@ -65,7 +65,7 @@
       <n-col :span="12">
         <n-form-item label="remarks" path="remarks">
         <n-input
-          v-model:value="selectedTask.remarks"
+          v-model:value="task.remarks"
           type="textarea"
           placeholder="remarks"
         />
@@ -76,7 +76,7 @@
         <n-button type="success" @click="handleValidateClick">
           Submit
         </n-button>
-        <n-button type="error" @click="handleDeleteClick" style="margin-left: 10px;" v-if="selectedTask.id">
+        <n-button type="error" @click="handleDeleteClick" style="margin-left: 10px;" v-if="task.id">
           Delete
         </n-button>
         <n-button type="tertiary" @click="handleCancelClick" style="margin-left: 10px;">
@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, toRef } from "vue";
 import { useMessage } from 'naive-ui'
 
 export default defineComponent({
@@ -103,19 +103,22 @@ export default defineComponent({
     const handleCancelClick = () => {
       context.emit('emitCancel')
     }
+    const task = toRef(props, 'selectedTask')
 
     const handleValidateClick = (e) => {
         e.preventDefault();
         formRef.value?.validate((errors) => {
+          console.log(task.value)
           if (!errors) {
-            if (props.selectedTask.id) {
+            if (task.value.id) {
               console.log('--------------update----------------')
-              context.emit('updateTask', props.selectedTask)
+              console.log(task.value)
+              context.emit('updateTask', task.value)
               message.success("Data Updated");
             } else {
               console.log('--------------create----------------')
-              console.log(props.selectedTask)
-              context.emit('submitTask', props.selectedTask)
+              console.log(task.value)
+              context.emit('submitTask', task.value)
               message.success("Data Created");
             }
           } else {
@@ -125,11 +128,12 @@ export default defineComponent({
      }
 
      const handleDeleteClick = () => {
-      context.emit('deleteTask', props.selectedTask.id)
+      context.emit('deleteTask', task.value.id)
      }
 
     return {
       formRef,
+      task,
       bodyStyle: {
         width: "1000px"
       },
@@ -141,10 +145,10 @@ export default defineComponent({
       formattedValue: ref("2007-06-30 12:08:55"),
       rules: {
         name: {
-          required: true,
-          message: "Please input Task name",
-          trigger: ["input"]
-        }
+            required: true,
+            message: "Please input your name",
+            trigger: "blur"
+          },
       },
       handleCancelClick,
       handleValidateClick,
@@ -154,11 +158,11 @@ export default defineComponent({
   props: {
     selectedTask: {
       default: {
-        name: " ",
+        name: "",
         start_date: "2007-06-30 12:08:55",
         end_date: "2007-06-30 12:08:55",
         priority: "regular",
-        remarks: " "
+        remarks: ""
       },
       type: Object
     }

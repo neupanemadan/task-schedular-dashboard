@@ -54,18 +54,10 @@ class Authenticator {
   }
 
   logout () {
-    return new Promise((resolve, reject) => {
-      Promise.all([this._revokeAccessToken(), this._revokeRefreshToken()])
-        .then(() => {
-          storage.clear()
-          delete this.axios.defaults.headers.common.Authorization
-          resolve()
-        })
-        .catch((error) => {
-          storage.clear()
-          delete this.axios.defaults.headers.common.Authorization
-          reject(error)
-        })
+    return new Promise((resolve) => {
+      storage.clear()
+      delete this.axios.defaults.headers.common.Authorization
+      resolve()
     })
   }
 
