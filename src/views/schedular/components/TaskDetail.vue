@@ -107,8 +107,11 @@ export default defineComponent({
 
     const handleValidateClick = (e) => {
         e.preventDefault();
-        formRef.value?.validate((errors) => {
-          if (!errors) {
+        console.log('------------')
+        console.log(task.value.name)
+          if (task.value.name.trim()  === '') {
+            message.warning("Invalid, Re-check the data!");
+          } else {
             if (task.value.id) {
               context.emit('updateTask', task.value)
               message.success("Data Updated");
@@ -116,10 +119,7 @@ export default defineComponent({
               context.emit('submitTask', task.value)
               message.success("Data Created");
             }
-          } else {
-            message.error("Invalid, Re-check the data!");
           }
-        });
      }
 
      const handleDeleteClick = () => {
