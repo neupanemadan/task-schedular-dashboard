@@ -15,7 +15,7 @@
         >Sign Up Error</n-alert>
         <div class="view-account-form">
           <n-form ref="formRef" label-placement="left" size="large" :model="user" :rules="rules">
-            <n-form-item path="Email">
+            <n-form-item path="email">
               <n-input v-model:value="user.email" placeholder="Email">
                 <template #prefix>
                   <n-icon size="18" color="#808695">
@@ -24,7 +24,7 @@
                 </template>
               </n-input>
             </n-form-item>
-            <n-form-item path="Name">
+            <n-form-item path="name">
               <n-input v-model:value="user.name" placeholder="Name">
                 <template #prefix>
                   <n-icon size="18" color="#808695">

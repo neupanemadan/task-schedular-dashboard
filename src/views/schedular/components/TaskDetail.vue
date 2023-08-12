@@ -108,16 +108,11 @@ export default defineComponent({
     const handleValidateClick = (e) => {
         e.preventDefault();
         formRef.value?.validate((errors) => {
-          console.log(task.value)
           if (!errors) {
             if (task.value.id) {
-              console.log('--------------update----------------')
-              console.log(task.value)
               context.emit('updateTask', task.value)
               message.success("Data Updated");
             } else {
-              console.log('--------------create----------------')
-              console.log(task.value)
               context.emit('submitTask', task.value)
               message.success("Data Created");
             }
@@ -133,7 +128,6 @@ export default defineComponent({
 
     return {
       formRef,
-      task,
       bodyStyle: {
         width: "1000px"
       },
@@ -142,13 +136,13 @@ export default defineComponent({
         footer: "soft"
       },
       size: ref("medium"),
-      formattedValue: ref("2007-06-30 12:08:55"),
+      task,
       rules: {
         name: {
             required: true,
             message: "Please input your name",
             trigger: "blur"
-          },
+          }
       },
       handleCancelClick,
       handleValidateClick,
