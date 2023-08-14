@@ -1,4 +1,4 @@
-# Vue Task Scheduling App with FullCalendar Integration (Serverless)
+#  Task Scheduling App
 
 This is a simple Vue.js application that allows you to manage tasks using a task scheduling system. The app is integrated with FullCalendar, allowing you to easily add, update, and delete tasks, as well as drag and drop them onto the calendar. This version of the app is designed to be serverless and deployable to AWS S3 using the Serverless Framework.
 
