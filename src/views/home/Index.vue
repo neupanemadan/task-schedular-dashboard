@@ -26,11 +26,8 @@ import { defineComponent, ref, h} from "vue";
 import { mapActions, mapState } from "pinia"
 import { taskStore } from "@/store/task.js"
 import moment from 'moment'
-import { NButton, useMessage } from "naive-ui";
 
-  const createColumns = ({
-    play
-  }) => {
+  const createColumns = () => {
     return [
       {
         title: "Name",
@@ -60,13 +57,8 @@ import { NButton, useMessage } from "naive-ui";
       ...mapState(taskStore, ["tasks"])
     },
     setup() {
-      const message = useMessage();
       return {
-        columns: createColumns({
-          play(row) {
-            message.info(`Play ${row.title}`);
-          }
-        }),
+        columns: createColumns(),
         pagination: false
       };
     },

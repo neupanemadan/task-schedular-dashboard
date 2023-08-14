@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.8",
@@ -14,19 +15,23 @@
     "@fullcalendar/timegrid": "^6.1.8",
     "@fullcalendar/vue3": "^6.1.8",
     "@tato30/vue-pdf": "^1.2.4",
+    "@testing-library/vue": "^7.0.0",
     "@vicons/ionicons5": "^0.12.0",
     "axios": "^1.2.1",
+    "happy-dom": "^10.9.0",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "pinia": "^2.0.29",
     "unplugin-vue-components": "^0.22.12",
     "vfonts": "^0.0.3",
+    "vitest": "^0.34.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "naive-ui": "^2.34.3",
+    "serverless-finch": "^4.0.3",
     "vite": "^4.0.0",
     "vite-plugin-compression": "^0.5.1"
   }
