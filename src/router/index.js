@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 const AppLayout = () =>  import('@/components/AppLayout.vue')
 const Home = () =>  import( '@/views/home/Index.vue')
 const Login = () => import('@/views/login/index.vue')
-const About = () => import('@/views/about/Index.vue')
+const Signup = () => import('@/views/signup/index.vue')
+const About = () => import('@/views/schedular/Index.vue')
 const Users = () => import('@/views/users/Index.vue')
 
 const routes = [
@@ -38,8 +39,8 @@ const routes = [
       },
       {
         component: About,
-        name: 'about',
-        path: '/about',
+        name: 'schedular',
+        path: '/schedular',
         meta: {
           requiresAuth: true,
           redirectOnExpire: true
@@ -53,6 +54,11 @@ const routes = [
     component: Login,
     name: 'login',
     path: '/login'
+  },
+  {
+    component: Signup,
+    name: 'signup',
+    path: '/signup'
   },
 ]
 

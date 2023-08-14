@@ -32,30 +32,32 @@ class Authenticator {
     return new Promise((resolve, reject) => {
       return this.axios.post("/api/login", credentials)
         .then(({ data }) => {
-          console.log("authenticator000000000000000000000000000")
             this.axios.defaults.headers.common.Authorization = 'Bearer ' + data.access_token
             storage.storeTokenDetails(data.access_token)
             storage.set('user', data.user)
             resolve()
-          console.log("authenticator000000000000000000000000000111111111111111111111111111111")
+          .catch((error) => reject(error))
+      }).catch((error) => reject(error))
+    })
+  }
+
+  signup (user) {
+      console.log(user, '-------------')
+      return new Promise((resolve, reject) => {
+      return this.axios.post("/api/register", user)
+        .then(({ data }) => {
+            this.login(data.user)
+            resolve()
           .catch((error) => reject(error))
       }).catch((error) => reject(error))
     })
   }
 
   logout () {
-    return new Promise((resolve, reject) => {
-      Promise.all([this._revokeAccessToken(), this._revokeRefreshToken()])
-        .then(() => {
-          storage.clear()
-          delete this.axios.defaults.headers.common.Authorization
-          resolve()
-        })
-        .catch((error) => {
-          storage.clear()
-          delete this.axios.defaults.headers.common.Authorization
-          reject(error)
-        })
+    return new Promise((resolve) => {
+      storage.clear()
+      delete this.axios.defaults.headers.common.Authorization
+      resolve()
     })
   }
 

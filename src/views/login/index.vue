@@ -24,15 +24,6 @@
               </template>
             </n-input>
           </n-form-item>
-          <n-form-item path="Username" v-if="userCreate">
-            <n-input v-model:value="user.username" placeholder="Username">
-              <template #prefix>
-                <n-icon size="18" color="#808695">
-                  <PersonOutline />
-                </n-icon>
-              </template>
-            </n-input>
-          </n-form-item>
           <n-form-item path="password">
             <n-input
               v-model:value="user.password"
@@ -50,7 +41,7 @@
           <n-form-item>
             <n-button
               type="primary"
-              @click="loginUser"
+              @click="handleSubmit"
               size="large"
               :loading="loading"
               block
@@ -59,11 +50,11 @@
           <n-form-item>
             <n-button
               type="info"
-              @click="createUser"
+              @click="$router.push('signup')"
               size="large"
               :loading="loading"
               block
-            >Register</n-button>
+            >Sign Up</n-button>
           </n-form-item>
         </n-form>
       </div>
@@ -89,16 +80,15 @@ export default {
         username: null,
         password: null
       },
-      userCreate: false,
       rules: {
         email: {
           required: true,
           message: "Email is Required.",
           trigger: "blur"
         },
-        username: {
+        name: {
           required: true,
-          message: "Username is Required.",
+          message: "Name is Required.",
           trigger: "blur"
         },
         password: {
@@ -110,11 +100,8 @@ export default {
     };
   },
   methods: {
-    loginUser () {
-      this.userCreate = false
-      this.handleSubmit()
-    },
     handleSubmit() {
+      this.hasLoginError = false;
       this.$auth
         .login(this.user)
         .then(() => {
@@ -125,10 +112,6 @@ export default {
         .catch(() => {
           this.hasLoginError = true;
         });
-    },
-    createUser () {
-      this.userCreate = true
-      this.handleSubmit()
     }
   }
 };
