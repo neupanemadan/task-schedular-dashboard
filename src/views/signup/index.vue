@@ -12,7 +12,11 @@
           class="login-alert"
           closable
           :bordered="false"
-        >Sign Up Error</n-alert>
+        >Sign Up Error
+      <ul>
+        <li v-if="!user.email">Email is required</li>    
+        <li v-if="user.password && user.password.length < 6">Password must be length of 6</li>    
+      </ul></n-alert>
         <div class="view-account-form">
           <n-form ref="formRef" label-placement="left" size="large" :model="user" :rules="rules">
             <n-form-item path="email">
@@ -86,7 +90,7 @@
         hasSignUpError: false,
         user: {
           email: null,
-          username: null,
+          name: null,
           password: null
         },
         rules: {
