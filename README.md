@@ -50,7 +50,7 @@ Open your web browser and navigate to http://localhost:5173 to access the app.
 3. Deploy the app to AWS S3 using Serverless:
 
    ```bash
-   make deploy
+   make deploy-app
 
 This command will package and deploy app to an S3 bucket.
 Once deployment is complete, you'll receive a URL where your app is hosted.
