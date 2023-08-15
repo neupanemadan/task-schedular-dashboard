@@ -115,16 +115,20 @@
     methods: {
       signUp () {
         this.hasSignUpError = false;
-        this.$auth
-          .signup(this.user)
-          .then(() => {
-            this.$router.push({
-              name: "home"
+        if (this.user.email !== '' && this.user.password.length >= 6) {
+          this.$auth
+            .signup(this.user)
+            .then(() => {
+              this.$router.push({
+                name: "home"
+              });
+            })
+            .catch(() => {
+              this.hasSignUpError = true;
             });
-          })
-          .catch(() => {
-            this.hasSignUpError = true;
-          });
+        } else {
+          this.hasSignUpError = true;
+        }
       },
     }
   };
